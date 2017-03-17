@@ -29,5 +29,7 @@ namespace Infnet.Aspnet.Tp3.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Infnet.Aspnet.Tp3.Models.BookViewModel> BookViewModels { get; set; }
     }
 }
