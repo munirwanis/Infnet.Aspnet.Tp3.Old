@@ -1,14 +1,13 @@
-﻿using Infnet.Aspnet.Tp3.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Infnet.Aspnet.Tp3.Repository
 {
-    public interface IRepository
+    public interface IRepository<T>
     {
-        TObject GetData<TObject>(int id) where TObject : BaseEntity, new();
-        List<TObject> GetListData<TObject>() where TObject : BaseEntity, new();
+        T GetData(int id);
+        List<T> GetListData();
         bool UpdateData(int id);
         bool DeleteData(int id);
-        bool InsertData(object data);
+        bool InsertData(T data);
     }
 }

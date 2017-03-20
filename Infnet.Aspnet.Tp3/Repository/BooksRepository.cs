@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Infnet.Aspnet.Tp3.Repository
 {
-    internal class BooksRepository : IRepository
+    internal class BooksRepository : IRepository<BooksEntity>
     {
         private string connString;
         public BooksRepository(string connString)
@@ -19,14 +20,14 @@ namespace Infnet.Aspnet.Tp3.Repository
             throw new NotImplementedException();
         }
 
-        public TObject GetData<TObject>(int id) where TObject : BaseEntity, new()
+        public BooksEntity GetData(int id)
         {
             using (var conn = new SqlConnection(this.connString))
             {
                 string query = @"SELECT * FROM Books WHERE Id = @id";
                 var command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@id", id);
-                TObject book = null;
+                BooksEntity book = new BooksEntity();
                 try
                 {
                     conn.Open();
@@ -36,7 +37,6 @@ namespace Infnet.Aspnet.Tp3.Repository
                         {
                             if (reader.Read())
                             {
-                                book = new BooksEntity();
                                 book.Author = (string)reader["Author"];
                                 book.Id = (int)reader["id"];
                                 book.Publisher = (string)reader["Publisher"];
@@ -46,9 +46,9 @@ namespace Infnet.Aspnet.Tp3.Repository
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return null;
+                    Debug.WriteLine(ex);
                 }
                 finally
                 {
@@ -58,13 +58,13 @@ namespace Infnet.Aspnet.Tp3.Repository
             }
         }
 
-        public List<TObject> GetListData<TObject>() where TObject : BaseEntity, new()
+        public List<BooksEntity> GetListData()
         {
             using (var conn = new SqlConnection(this.connString))
             {
-                string query = @"SELECT * FROM Books WHERE";
+                string query = @"SELECT * FROM Books";
                 var command = new SqlCommand(query, conn);
-                List<BooksEntity> books = null;
+                List<BooksEntity> books = new List<BooksEntity>();
                 try
                 {
                     conn.Open();
@@ -72,10 +72,9 @@ namespace Infnet.Aspnet.Tp3.Repository
                     {
                         if (reader.HasRows)
                         {
-                            books = new List<BooksEntity>();
                             while (reader.Read())
                             {
-                                book = new BooksEntity();
+                                var book = new BooksEntity();
                                 book.Author = (string)reader["Author"];
                                 book.Id = (int)reader["id"];
                                 book.Publisher = (string)reader["Publisher"];
@@ -86,9 +85,9 @@ namespace Infnet.Aspnet.Tp3.Repository
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return null;
+                    Debug.WriteLine(ex);
                 }
                 finally
                 {
@@ -98,9 +97,33 @@ namespace Infnet.Aspnet.Tp3.Repository
             }
         }
 
-        public bool InsertData(object data)
+        public bool InsertData(BooksEntity data)
         {
-            throw new NotImplementedException();
+            int rows = 0;
+            using (var conn = new SqlConnection(this.connString))
+            {
+                string query = @"INSERT INTO Books (Author, Publisher, Title, Year) VALUES (@Author, @Publisher, @Title, @Year)";
+                var command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@Author", data.Author);
+                command.Parameters.AddWithValue("@Publisher", data.Publisher);
+                command.Parameters.AddWithValue("@Title", data.Title);
+                command.Parameters.AddWithValue("@Year", data.Year);
+                BooksEntity book = new BooksEntity();
+                try
+                {
+                    conn.Open();
+                    rows = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+                return rows > 0;
+            }
         }
 
         public bool UpdateData(int id)

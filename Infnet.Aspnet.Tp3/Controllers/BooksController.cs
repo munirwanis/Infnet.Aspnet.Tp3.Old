@@ -1,17 +1,33 @@
-﻿using System;
+﻿using Infnet.Aspnet.Tp3.Entities;
+using Infnet.Aspnet.Tp3.Models;
+using Infnet.Aspnet.Tp3.Repository;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Infnet.Aspnet.Tp3.Controllers
 {
     public class BooksController : Controller
     {
+        private Context _repositoryContext;
+        public BooksController()
+        {
+            _repositoryContext = new Context();
+        }
         // GET: Books
         public ActionResult Index()
         {
-            return View();
+            var response = new List<BookViewModel>();
+            var booksEntity = this._repositoryContext.BooksRepository.GetListData();
+            booksEntity.ForEach(x => {
+                response.Add(new BookViewModel {
+                    Author = x.Author,
+                    Id = x.Id,
+                    Publisher = x.Publisher,
+                    Title = x.Title,
+                    Year = x.Year
+                });
+            });
+            return View(response);
         }
 
         // GET: Books/Details/5
@@ -28,17 +44,26 @@ namespace Infnet.Aspnet.Tp3.Controllers
 
         // POST: Books/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(BookViewModel book)
         {
             try
             {
                 // TODO: Add insert logic here
+                var bookEntity = new BooksEntity
+                {
+                    Author = book.Author,
+                    Publisher = book.Publisher,
+                    Title = book.Title,
+                    Year = book.Year
+                };
 
-                return RedirectToAction("Index");
+                var result = this._repositoryContext.BooksRepository.InsertData(bookEntity);
+
+                return result ? RedirectToAction("Index") : RedirectToAction("Create");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Create");
             }
         }
 
