@@ -249,6 +249,7 @@
     <Content Include="Views\Books\Index.cshtml" />
     <Content Include="Views\Books\Create.cshtml" />
     <Content Include="Views\Books\Details.cshtml" />
+    <Content Include="Views\Books\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

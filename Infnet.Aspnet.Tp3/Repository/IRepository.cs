@@ -6,7 +6,7 @@ namespace Infnet.Aspnet.Tp3.Repository
     {
         T GetData(int id);
         List<T> GetListData();
-        bool UpdateData(int id);
+        bool UpdateData(T data);
         bool DeleteData(int id);
         bool InsertData(T data);
     }

@@ -126,9 +126,34 @@ namespace Infnet.Aspnet.Tp3.Repository
             }
         }
 
-        public bool UpdateData(int id)
+        public bool UpdateData(BooksEntity data)
         {
-            throw new NotImplementedException();
+            int rows = 0;
+            using (var conn = new SqlConnection(this.connString))
+            {
+                string query = @"UPDATE Books SET Author = @Author, Publisher = @Publisher, Title = @Title, Year = @Year WHERE Id = @Id";
+                var command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@Author", data.Author);
+                command.Parameters.AddWithValue("@Publisher", data.Publisher);
+                command.Parameters.AddWithValue("@Title", data.Title);
+                command.Parameters.AddWithValue("@Year", data.Year);
+                command.Parameters.AddWithValue("@Id", data.Id);
+                BooksEntity book = new BooksEntity();
+                try
+                {
+                    conn.Open();
+                    rows = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+                return rows > 0;
+            }
         }
     }
 }

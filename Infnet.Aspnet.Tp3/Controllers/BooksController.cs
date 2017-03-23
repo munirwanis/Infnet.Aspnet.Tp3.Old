@@ -1,7 +1,9 @@
 ﻿using Infnet.Aspnet.Tp3.Entities;
 using Infnet.Aspnet.Tp3.Models;
 using Infnet.Aspnet.Tp3.Repository;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Web.Mvc;
 
 namespace Infnet.Aspnet.Tp3.Controllers
@@ -33,7 +35,14 @@ namespace Infnet.Aspnet.Tp3.Controllers
         // GET: Books/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var response = new BookViewModel();
+            var bookEntity = this._repositoryContext.BooksRepository.GetData(id);
+            response.Author = bookEntity.Author;
+            response.Id = bookEntity.Id;
+            response.Publisher = bookEntity.Publisher;
+            response.Title = bookEntity.Title;
+            response.Year = bookEntity.Year;
+            return View(response);
         }
 
         // GET: Books/Create
@@ -70,22 +79,37 @@ namespace Infnet.Aspnet.Tp3.Controllers
         // GET: Books/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var response = new BookViewModel();
+            var bookEntity = this._repositoryContext.BooksRepository.GetData(id);
+            response.Author = bookEntity.Author;
+            response.Id = bookEntity.Id;
+            response.Publisher = bookEntity.Publisher;
+            response.Title = bookEntity.Title;
+            response.Year = bookEntity.Year;
+            return View(response);
         }
 
         // POST: Books/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, BookViewModel model)
         {
             try
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction("Index");
+                var bookEntity = new BooksEntity
+                {
+                    Id = id,
+                    Author = model.Author,
+                    Publisher = model.Publisher,
+                    Title = model.Title,
+                    Year = model.Year
+                };
+                var result = this._repositoryContext.BooksRepository.UpdateData(bookEntity);
+                return result ? RedirectToAction("Index") : RedirectToAction("Edit");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Debug.WriteLine(ex);
+                return View("Edit");
             }
         }
 
