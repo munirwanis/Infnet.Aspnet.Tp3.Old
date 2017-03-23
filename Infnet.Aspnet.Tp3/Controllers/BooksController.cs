@@ -57,7 +57,6 @@ namespace Infnet.Aspnet.Tp3.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
                 var bookEntity = new BooksEntity
                 {
                     Author = book.Author,
@@ -116,22 +115,29 @@ namespace Infnet.Aspnet.Tp3.Controllers
         // GET: Books/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var response = new BookViewModel();
+            var bookEntity = this._repositoryContext.BooksRepository.GetData(id);
+            response.Author = bookEntity.Author;
+            response.Id = bookEntity.Id;
+            response.Publisher = bookEntity.Publisher;
+            response.Title = bookEntity.Title;
+            response.Year = bookEntity.Year;
+            return View(response);
         }
 
         // POST: Books/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id, BookViewModel model)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                var result = this._repositoryContext.BooksRepository.DeleteData(id);
+                return result ? RedirectToAction("Index") : RedirectToAction("Delete");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Debug.WriteLine(ex);
+                return View("Delete");
             }
         }
     }

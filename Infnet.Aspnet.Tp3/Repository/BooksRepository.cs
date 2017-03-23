@@ -17,7 +17,28 @@ namespace Infnet.Aspnet.Tp3.Repository
 
         public bool DeleteData(int id)
         {
-            throw new NotImplementedException();
+            int rows = 0;
+            using (var conn = new SqlConnection(this.connString))
+            {
+                string query = @"DELETE FROM Books WHERE Id = @Id";
+                var command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@Id", id);
+                BooksEntity book = new BooksEntity();
+                try
+                {
+                    conn.Open();
+                    rows = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+                return rows > 0;
+            }
         }
 
         public BooksEntity GetData(int id)
