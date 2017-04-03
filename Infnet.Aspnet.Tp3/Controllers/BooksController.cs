@@ -10,10 +10,10 @@ namespace Infnet.Aspnet.Tp3.Controllers
 {
     public class BooksController : Controller
     {
-        private Context _repositoryContext;
-        public BooksController()
+        private readonly IContext _repositoryContext;
+        public BooksController(IContext context)
         {
-            _repositoryContext = new Context();
+            _repositoryContext = context;
         }
         // GET: Books
         public ActionResult Index()

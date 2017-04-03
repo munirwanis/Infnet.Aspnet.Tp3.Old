@@ -1,4 +1,5 @@
 ﻿using Infnet.Aspnet.Tp3.Entities;
+using Infnet.Aspnet.Tp3.Utility;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,16 +10,16 @@ namespace Infnet.Aspnet.Tp3.Repository
 {
     internal class BooksRepository : IRepository<BooksEntity>
     {
-        private string connString;
-        public BooksRepository(string connString)
+        private readonly IConfigurationUtility _configurationUtility;
+        public BooksRepository(IConfigurationUtility configurationUtility)
         {
-            this.connString = connString;
+            this._configurationUtility = configurationUtility;
         }
 
         public bool DeleteData(int id)
         {
             int rows = 0;
-            using (var conn = new SqlConnection(this.connString))
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
                 string query = @"DELETE FROM Books WHERE Id = @Id";
                 var command = new SqlCommand(query, conn);
@@ -43,7 +44,7 @@ namespace Infnet.Aspnet.Tp3.Repository
 
         public BooksEntity GetData(int id)
         {
-            using (var conn = new SqlConnection(this.connString))
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
                 string query = @"SELECT * FROM Books WHERE Id = @id";
                 var command = new SqlCommand(query, conn);
@@ -81,7 +82,7 @@ namespace Infnet.Aspnet.Tp3.Repository
 
         public List<BooksEntity> GetListData()
         {
-            using (var conn = new SqlConnection(this.connString))
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
                 string query = @"SELECT * FROM Books";
                 var command = new SqlCommand(query, conn);
@@ -121,7 +122,7 @@ namespace Infnet.Aspnet.Tp3.Repository
         public bool InsertData(BooksEntity data)
         {
             int rows = 0;
-            using (var conn = new SqlConnection(this.connString))
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
                 string query = @"INSERT INTO Books (Author, Publisher, Title, Year) VALUES (@Author, @Publisher, @Title, @Year)";
                 var command = new SqlCommand(query, conn);
@@ -150,7 +151,7 @@ namespace Infnet.Aspnet.Tp3.Repository
         public bool UpdateData(BooksEntity data)
         {
             int rows = 0;
-            using (var conn = new SqlConnection(this.connString))
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
                 string query = @"UPDATE Books SET Author = @Author, Publisher = @Publisher, Title = @Title, Year = @Year WHERE Id = @Id";
                 var command = new SqlCommand(query, conn);
