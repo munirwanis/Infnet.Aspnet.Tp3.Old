@@ -203,7 +203,9 @@
     <Content Include="App_Data\BookStore_log.ldf">
       <DependentUpon>BookStore.mdf</DependentUpon>
     </Content>
+    <Content Include="App_Data\CreateUserForDb.sql" />
     <Content Include="App_Data\dbo.Books.sql" />
+    <Content Include="App_Data\dbo.Loan.sql" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
