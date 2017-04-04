@@ -23,6 +23,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Year)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Available)
+        </th>
         <th></th>
     </tr>
 
@@ -39,6 +42,16 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Year)
+        </td>
+        <td>
+            @if (item.Available)
+            {
+                <p>Yes</p>;
+            }
+            else
+            {
+                <p>No</p>;
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

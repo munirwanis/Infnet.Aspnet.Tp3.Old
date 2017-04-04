@@ -4,6 +4,7 @@ using Infnet.Aspnet.Tp3.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Web.Mvc;
 
 namespace Infnet.Aspnet.Tp3.Controllers
@@ -20,13 +21,15 @@ namespace Infnet.Aspnet.Tp3.Controllers
         {
             var response = new List<BookViewModel>();
             var booksEntity = this._repositoryContext.BooksRepository.GetListData();
+            var loanEntity = this._repositoryContext.LoanRepository.GetListData();
             booksEntity.ForEach(x => {
                 response.Add(new BookViewModel {
                     Author = x.Author,
                     Id = x.Id,
                     Publisher = x.Publisher,
                     Title = x.Title,
-                    Year = x.Year
+                    Year = x.Year,
+                    Available = !loanEntity.Any(f => f.BookId == x.Id && f.LoanDate < DateTime.Now && f.DevolutionDate > DateTime.Now)
                 });
             });
             return View(response);

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace Infnet.Aspnet.Tp3.Controllers
@@ -42,7 +41,7 @@ namespace Infnet.Aspnet.Tp3.Controllers
                     }
                 });
             });
-            return View(response);
+            return View(response.OrderByDescending(x => x.DevolutionDate));
         }
 
         // GET: Loan/Details/5

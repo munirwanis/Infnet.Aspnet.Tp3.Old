@@ -17,5 +17,7 @@ namespace Infnet.Aspnet.Tp3.Models
 
         [Range(0, 2030, ErrorMessage = "The year is not valid"), Required]
         public int Year { get; set; }
+
+        public bool Available { get; set; }
     }
 }
