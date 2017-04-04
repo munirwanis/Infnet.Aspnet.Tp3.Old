@@ -8,48 +8,27 @@ using System.Diagnostics;
 
 namespace Infnet.Aspnet.Tp3.Repository
 {
-    internal class BooksRepository : IRepository<BooksEntity>
+    public class LoanRepository : IRepository<LoanEntity>
     {
         private readonly IConfigurationUtility _configurationUtility;
-        public BooksRepository(IConfigurationUtility configurationUtility)
+        public LoanRepository(IConfigurationUtility configurationUtility)
         {
             this._configurationUtility = configurationUtility;
         }
 
         public bool DeleteData(int id)
         {
-            int rows = 0;
-            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
-            {
-                string query = @"DELETE FROM Books WHERE Id = @Id";
-                var command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@Id", id);
-                BooksEntity book = new BooksEntity();
-                try
-                {
-                    conn.Open();
-                    rows = command.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-                finally
-                {
-                    conn.Close();
-                }
-                return rows > 0;
-            }
+            throw new NotImplementedException();
         }
 
-        public BooksEntity GetData(int id)
+        public LoanEntity GetData(int id)
         {
             using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
-                string query = @"SELECT * FROM Books WHERE Id = @id";
+                string query = @"SELECT * FROM Loan WHERE Id = @id";
                 var command = new SqlCommand(query, conn);
                 command.Parameters.AddWithValue("@id", id);
-                BooksEntity book = new BooksEntity();
+                LoanEntity loan = new LoanEntity();
                 try
                 {
                     conn.Open();
@@ -59,11 +38,10 @@ namespace Infnet.Aspnet.Tp3.Repository
                         {
                             if (reader.Read())
                             {
-                                book.Author = (string)reader["Author"];
-                                book.Id = (int)reader["id"];
-                                book.Publisher = (string)reader["Publisher"];
-                                book.Title = (string)reader["Title"];
-                                book.Year = (int)reader["Year"];
+                                loan.BookId = (int)reader["BookId"];
+                                loan.Id = (int)reader["id"];
+                                loan.LoanDate = (DateTime)reader["LoanDate"];
+                                loan.DevolutionDate = (DateTime)reader["DevolutionDate"];
                             }
                         }
                     }
@@ -76,17 +54,17 @@ namespace Infnet.Aspnet.Tp3.Repository
                 {
                     conn.Close();
                 }
-                return book;
+                return loan;
             }
         }
 
-        public List<BooksEntity> GetListData()
+        public List<LoanEntity> GetListData()
         {
             using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
-                string query = @"SELECT * FROM Books";
+                string query = @"SELECT * FROM Loan";
                 var command = new SqlCommand(query, conn);
-                List<BooksEntity> books = new List<BooksEntity>();
+                List<LoanEntity> loans = new List<LoanEntity>();
                 try
                 {
                     conn.Open();
@@ -96,13 +74,12 @@ namespace Infnet.Aspnet.Tp3.Repository
                         {
                             while (reader.Read())
                             {
-                                var book = new BooksEntity();
-                                book.Author = (string)reader["Author"];
-                                book.Id = (int)reader["id"];
-                                book.Publisher = (string)reader["Publisher"];
-                                book.Title = (string)reader["Title"];
-                                book.Year = (int)reader["Year"];
-                                books.Add(book);
+                                var loan = new LoanEntity();
+                                loan.BookId = (int)reader["BookId"];
+                                loan.Id = (int)reader["id"];
+                                loan.LoanDate = (DateTime)reader["LoanDate"];
+                                loan.DevolutionDate = (DateTime)reader["DevolutionDate"];
+                                loans.Add(loan);
                             }
                         }
                     }
@@ -115,22 +92,20 @@ namespace Infnet.Aspnet.Tp3.Repository
                 {
                     conn.Close();
                 }
-                return books;
+                return loans;
             }
         }
 
-        public bool InsertData(BooksEntity data)
+        public bool InsertData(LoanEntity data)
         {
             int rows = 0;
             using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
-                string query = @"INSERT INTO Books (Author, Publisher, Title, Year) VALUES (@Author, @Publisher, @Title, @Year)";
+                string query = @"INSERT INTO Loan (LoanDate, DevolutionDate, BookId) VALUES (@LoanDate, @DevolutionDate, @BookId)";
                 var command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@Author", data.Author);
-                command.Parameters.AddWithValue("@Publisher", data.Publisher);
-                command.Parameters.AddWithValue("@Title", data.Title);
-                command.Parameters.AddWithValue("@Year", data.Year);
-                BooksEntity book = new BooksEntity();
+                command.Parameters.AddWithValue("@LoanDate", data.LoanDate);
+                command.Parameters.AddWithValue("@DevolutionDate", data.DevolutionDate);
+                command.Parameters.AddWithValue("@BookId", data.BookId);
                 try
                 {
                     conn.Open();
@@ -148,19 +123,17 @@ namespace Infnet.Aspnet.Tp3.Repository
             }
         }
 
-        public bool UpdateData(BooksEntity data)
+        public bool UpdateData(LoanEntity data)
         {
             int rows = 0;
             using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
             {
-                string query = @"UPDATE Books SET Author = @Author, Publisher = @Publisher, Title = @Title, Year = @Year WHERE Id = @Id";
+                string query = @"UPDATE Loan SET LoanDate = @LoanDate, DevolutionDate = @DevolutionDate, BookId = @BookId WHERE Id = @Id";
                 var command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@Author", data.Author);
-                command.Parameters.AddWithValue("@Publisher", data.Publisher);
-                command.Parameters.AddWithValue("@Title", data.Title);
-                command.Parameters.AddWithValue("@Year", data.Year);
+                command.Parameters.AddWithValue("@LoanDate", data.LoanDate);
+                command.Parameters.AddWithValue("@DevolutionDate", data.DevolutionDate);
+                command.Parameters.AddWithValue("@BookId", data.BookId);
                 command.Parameters.AddWithValue("@Id", data.Id);
-                BooksEntity book = new BooksEntity();
                 try
                 {
                     conn.Open();

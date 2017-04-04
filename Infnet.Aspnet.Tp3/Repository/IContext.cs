@@ -5,5 +5,7 @@ namespace Infnet.Aspnet.Tp3.Repository
     public interface IContext
     {
         IRepository<BooksEntity> BooksRepository { get; }
+
+        IRepository<LoanEntity> LoanRepository { get; }
     }
 }

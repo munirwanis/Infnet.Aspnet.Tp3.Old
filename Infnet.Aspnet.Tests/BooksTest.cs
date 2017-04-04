@@ -22,6 +22,7 @@ namespace Infnet.Aspnet.Tests
         public void Initialize()
         {
             var bookRepoMock = new Mock<IRepository<BooksEntity>>();
+            var loanRepoMock = new Mock<IRepository<LoanEntity>>();
             this._bookEntity = new BooksEntity
             {
                 Author = "Success Test",
@@ -64,7 +65,7 @@ namespace Infnet.Aspnet.Tests
             bookRepoMock.Setup(bookRepo => bookRepo.UpdateData(bookEntityFail)).Returns(false);
             bookRepoMock.Setup(bookRepo => bookRepo.GetData(1)).Returns(this._bookEntity);
             bookRepoMock.Setup(bookRepo => bookRepo.GetListData()).Returns(new List<BooksEntity> { this._bookEntity });
-            var context = new Context(bookRepoMock.Object);
+            var context = new Context(bookRepoMock.Object, loanRepoMock.Object);
             this._booksController = new BooksController(context);
         }
 

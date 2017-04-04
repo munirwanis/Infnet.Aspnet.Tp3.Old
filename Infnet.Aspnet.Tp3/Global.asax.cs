@@ -18,6 +18,7 @@ namespace Infnet.Aspnet.Tp3
 
             container.Register<IConfigurationUtility, ConfigurationUtility>(Lifestyle.Singleton);
             container.Register<IRepository<BooksEntity>, BooksRepository>(Lifestyle.Singleton);
+            container.Register<IRepository<LoanEntity>, LoanRepository>(Lifestyle.Singleton);
             container.Register<IContext, Context>(Lifestyle.Singleton);
 
             container.Verify();
