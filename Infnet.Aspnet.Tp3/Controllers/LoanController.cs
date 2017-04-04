@@ -107,7 +107,15 @@ namespace Infnet.Aspnet.Tp3.Controllers
             response.BookId = loanEntity.BookId;
             response.Id = loanEntity.Id;
             response.DevolutionDate = loanEntity.DevolutionDate;
-            response.LoanDate = loanEntity.LoanDate;
+            var bookEntity = this._repositoryContext.BooksRepository.GetData(response.BookId);
+            response.Book = new BookViewModel
+            {
+                Author = bookEntity.Author,
+                Id = bookEntity.Id,
+                Publisher = bookEntity.Publisher,
+                Title = bookEntity.Title,
+                Year = bookEntity.Year
+            };
             return View(response);
         }
 
@@ -137,7 +145,21 @@ namespace Infnet.Aspnet.Tp3.Controllers
         // GET: Loan/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var response = new LoanViewModel();
+            var loanEntity = this._repositoryContext.LoanRepository.GetData(id);
+            response.BookId = loanEntity.BookId;
+            response.Id = loanEntity.Id;
+            response.DevolutionDate = loanEntity.DevolutionDate;
+            var bookEntity = this._repositoryContext.BooksRepository.GetData(response.BookId);
+            response.Book = new BookViewModel
+            {
+                Author = bookEntity.Author,
+                Id = bookEntity.Id,
+                Publisher = bookEntity.Publisher,
+                Title = bookEntity.Title,
+                Year = bookEntity.Year
+            };
+            return View(response);
         }
 
         // POST: Loan/Delete/5
@@ -146,13 +168,13 @@ namespace Infnet.Aspnet.Tp3.Controllers
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                var result = this._repositoryContext.LoanRepository.DeleteData(id);
+                return result ? RedirectToAction("Index") : RedirectToAction("Delete");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Debug.WriteLine(ex);
+                return View("Delete");
             }
         }
     }

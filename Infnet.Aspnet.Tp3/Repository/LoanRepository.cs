@@ -18,7 +18,28 @@ namespace Infnet.Aspnet.Tp3.Repository
 
         public bool DeleteData(int id)
         {
-            throw new NotImplementedException();
+            int rows = 0;
+            using (var conn = new SqlConnection(this._configurationUtility.ConnectionString))
+            {
+                string query = @"DELETE FROM Loan WHERE Id = @Id";
+                var command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@Id", id);
+                LoanEntity loan = new LoanEntity();
+                try
+                {
+                    conn.Open();
+                    rows = command.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+                return rows > 0;
+            }
         }
 
         public LoanEntity GetData(int id)
