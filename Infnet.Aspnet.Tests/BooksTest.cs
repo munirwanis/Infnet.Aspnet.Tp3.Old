@@ -93,13 +93,6 @@ namespace Infnet.Aspnet.Tests
         }
 
         [TestMethod, TestCategory("BooksController")]
-        public void Books_InsertDataSuccess_Test()
-        {
-            var actionResult = (RedirectToRouteResult)this._booksController.Create(this._bookViewModelSuccess);
-            Assert.AreEqual("Index", actionResult.RouteValues.Values.FirstOrDefault());
-        }
-
-        [TestMethod, TestCategory("BooksController")]
         public void Books_InsertDataFail_Test()
         {
             var actionResult = (RedirectToRouteResult)this._booksController.Create(this._bookViewModelFail);
